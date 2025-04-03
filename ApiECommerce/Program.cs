@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); // Si vas a crear una API con controladores
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IComprasService, CompraServicio>();
 
 // Configurar la conexión a la base de datos MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

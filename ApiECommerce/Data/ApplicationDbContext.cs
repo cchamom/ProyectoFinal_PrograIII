@@ -12,14 +12,15 @@ namespace ProyectoFinal_PrograIII.Data
         public DbSet<Cliente> clientes { get; set; }
         public DbSet<Proveedor> proveedores { get; set; }
         public DbSet<Producto> Productos { get; set; }
-        public DbSet<Compra> Compras { get; set; }
+        public DbSet<Compra> compras { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<DetallePedido> DetallesPedido { get; set; }
-        public DbSet<DetalleCompra> DetallesCompra { get; set; }
+        public DbSet<DetalleCompra> DetallesCompras { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
 
             // Configuración de relaciones (Fluent API)
             /*modelBuilder.Entity<Compra>()
