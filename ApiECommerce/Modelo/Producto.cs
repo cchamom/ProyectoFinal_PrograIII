@@ -1,14 +1,10 @@
-using System.Collections.Generic;
-
-namespace ProyectoFinal_PrograIII.Modelo
+namespace ApiECommerce.Modelo
 {
     public class Producto
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        // Otras propiedades del producto
-
-        public ICollection<DetallePedido> DetallesPedido { get; set; }
-        public ICollection<DetalleCompra> DetallesCompra { get; set; }
+        public required string Nombre { get; set; }
+        public decimal Precio { get; set; }
+        public required int Existencias { get; set; }
     }
 }
