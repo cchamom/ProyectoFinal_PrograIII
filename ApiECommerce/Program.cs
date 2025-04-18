@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProyectoFinal_PrograIII.ApiECommerce.IServices;
+using ProyectoFinal_PrograIII.Data;
+using ProyectoFinal_PrograIII.IServices;
 using ProyectoFinal_PrograIII.Servicio;
-using ProyectoFinal_PrograIII.Data; // Asegúrate de tener esta línea
+using ProyectoFinal_PrograIII.Modelo;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Agregar servicios al contenedor.
-builder.Services.AddControllers(); // Si vas a crear una API con controladores
+// Agregar servicios al contenedor
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IComprasService, CompraServicio>();
@@ -19,15 +20,25 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.WriteIndented = true;
 });
 // Configurar la conexión a la base de datos MySQL
+
+// Configurar la conexión a MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(
+        connectionString, 
+        ServerVersion.AutoDetect(connectionString),
+        mySqlOptions => mySqlOptions.EnableRetryOnFailure()
+    )
+);
 
-builder.Services.AddScoped<IClienteService, ClienteServicio>();
+builder.Services.AddControllersWithViews()
+    .AddRazorRuntimeCompilation(); 
+
+// Registrar servicio de productos
+builder.Services.AddScoped<IProductoService, ProductoServicio>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -35,10 +46,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
-app.MapControllers(); // Si vas a crear una API con controladores
+app.MapControllers();
 
 app.Run();
 

@@ -15,6 +15,8 @@ namespace ProyectoFinal_PrograIII.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Compra> compras { get; set; }
         public DbSet<DetallePedido> DetallesPedidos { get; set; }
+        public DbSet<Producto>Productos { get; set; }
+        public DbSet<Compra> Compras { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Ventas> Venta { get; set; }
 
@@ -45,6 +47,8 @@ namespace ProyectoFinal_PrograIII.Data
                 .WithMany(p => p.DetallesPedidos)
                 .HasForeignKey(dv => dv.Id_Producto)
                 .OnDelete(DeleteBehavior.Restrict); // Configura el comportamiento ON DELETE RESTRICT
+             modelBuilder.Entity<Producto>().ToTable("productos");
+
             // Configuración de relaciones (Fluent API)
             /*modelBuilder.Entity<Compra>()
                 .HasOne(c => c.Proveedor)
