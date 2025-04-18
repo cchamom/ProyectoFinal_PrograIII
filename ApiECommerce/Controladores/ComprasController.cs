@@ -23,8 +23,15 @@ namespace ProyectoFinal_PrograIII.Controladores
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Compra>>> GetCompras()
         {
-            var compras = await _comprasService.ObtenerComprasAsync();
-            return Ok(compras);
+                try
+                {
+                    var compras = await _comprasService.ObtenerComprasAsync();
+                    return Ok(compras);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                }
         }
 
         [HttpGet("{id}")]
@@ -39,14 +46,21 @@ namespace ProyectoFinal_PrograIII.Controladores
         }
 
         [HttpPost]
-        public async Task<ActionResult<Compra>> CrearCompra([FromBody] Compra compra)
-        {
-            if (await _comprasService.CrearCompraAsync(compra))
+            public async Task<ActionResult<Compra>> CrearCompra([FromBody] Compra compra)
             {
-                return CreatedAtAction(nameof(GetCompra), new { id = compra.Id }, compra);
+                if (compra == null)
+                {
+                    return BadRequest("La compra no puede ser nula");
+                }
+
+                compra.Fecha = DateTime.Now;
+                
+                if (await _comprasService.CrearCompraAsync(compra))
+                {
+                    return CreatedAtAction(nameof(GetCompra), new { id = compra.Id }, compra);
+                }
+                return BadRequest("Error al crear la compra.");
             }
-            return BadRequest("Error al crear la compra.");
-        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarCompra(int id, [FromBody] Compra compra)

@@ -3,6 +3,7 @@ using ProyectoFinal_PrograIII.ApiECommerce.IServices;
 using ProyectoFinal_PrograIII.Servicio;
 using ProyectoFinal_PrograIII.Data; // Asegúrate de tener esta línea
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios al contenedor.
@@ -10,7 +11,13 @@ builder.Services.AddControllers(); // Si vas a crear una API con controladores
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IComprasService, CompraServicio>();
-
+builder.Services.AddScoped<IVentasService, VentaServicio>();
+builder.Services.AddScoped<IInventarioService, InventarioServicio>();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 // Configurar la conexión a la base de datos MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

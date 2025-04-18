@@ -15,12 +15,30 @@ namespace ProyectoFinal_PrograIII.Servicio
         {
             _context = context;
         }
+        // Constructor para inyectar el servicio de inventario
+        // Esto es útil para actualizar el inventario después de una compra
+        private readonly IInventarioService _inventarioService;
+        public CompraServicio(ApplicationDbContext context, IInventarioService inventarioService)           
+        {
+            _context = context;
+            _inventarioService = inventarioService;
+        }
 
         public async Task<IEnumerable<Compra>> ObtenerComprasAsync()
         {
-            return await _context.compras
-                .Include(c => c.Proveedor)
-                .ToListAsync();
+            try
+            {
+                return await _context.compras
+                    .Include(c => c.Proveedor)
+                    .Include(c => c.DetallesCompra)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Loggear el error si tienes un sistema de logging
+                throw new Exception("Error al obtener las compras", ex);
+            }
         }
 
         public async Task<Compra> ObtenerCompraAsync(int id)
@@ -36,11 +54,27 @@ namespace ProyectoFinal_PrograIII.Servicio
             {
                 return false;
             }
+             using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                compra.Fecha = DateTime.Now;
+                _context.compras.Add(compra);
+                await _context.SaveChangesAsync();
 
-            compra.Fecha = DateTime.Now; // Establecer la fecha actual si no está establecida
-            _context.compras.Add(compra);
-            var result = await _context.SaveChangesAsync();
-            return result > 0;
+                foreach (var detalle in compra.DetallesCompra)
+                {
+                    await _inventarioService.ActualizarInventarioPorCompra(detalle);
+                }
+
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
+
         }
 
         public async Task<bool> ActualizarCompraAsync(Compra compra)
