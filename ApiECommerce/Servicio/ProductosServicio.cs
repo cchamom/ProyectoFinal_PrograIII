@@ -1,16 +1,14 @@
-using ApiECommerce.Modelo;
-using ApiECommerce.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ApiECommerce.IServices;
-// ...resto del código igual...
+using ProyectoFinal_PrograIII.Data;
+using ProyectoFinal_PrograIII.Modelo;
+using ProyectoFinal_PrograIII.IServices;
 
-namespace ApiECommerce.Servicio
+namespace ProyectoFinal_PrograIII.Servicio
 {
     public class ProductoServicio : IProductoService
     {
-
-        
-
         private readonly ApplicationDbContext _context;
 
         public ProductoServicio(ApplicationDbContext context)
@@ -20,12 +18,12 @@ namespace ApiECommerce.Servicio
 
         public async Task<IEnumerable<Producto>> ObtenerProductosAsync()
         {
-            return await _context.productos.ToListAsync();
+            return await _context.Productos.ToListAsync();
         }
 
         public async Task<Producto> ObtenerProductoAsync(int id)
         {
-            return await _context.productos.FindAsync(id);
+            return await _context.Productos.FindAsync(id);
         }
 
         public async Task<bool> CrearProductoAsync(Producto producto)
@@ -35,14 +33,14 @@ namespace ApiECommerce.Servicio
                 return false;
             }
 
-            _context.productos.Add(producto);
+            _context.Productos.Add(producto);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
 
         public async Task<bool> ActualizarProductoAsync(Producto producto)
         {
-            if (producto == null || !await _context.productos.AnyAsync(p => p.Id == producto.Id))
+            if (producto == null || !await _context.Productos.AnyAsync(p => p.Id == producto.Id))
             {
                 return false;
             }
@@ -54,13 +52,13 @@ namespace ApiECommerce.Servicio
 
         public async Task<bool> EliminarProductoAsync(int id)
         {
-            var producto = await _context.productos.FindAsync(id);
+            var producto = await _context.Productos.FindAsync(id);
             if (producto == null)
             {
                 return false;
             }
 
-            _context.productos.Remove(producto);
+            _context.Productos.Remove(producto);
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }

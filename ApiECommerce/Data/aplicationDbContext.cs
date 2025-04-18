@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+/*using Microsoft.EntityFrameworkCore;
 using ApiECommerce.Modelo; // Asegúrate de que la ruta sea correcta
 
 namespace ApiECommerce.Data
@@ -43,6 +43,6 @@ namespace ApiECommerce.Data
                 .WithMany(co => co.DetallesCompra)
                 .HasForeignKey(dc => dc.Id_Compras)
                 .OnDelete(DeleteBehavior.Cascade); // Configura el comportamiento ON DELETE CASCADE
-        */}
+        }
     }
-}
+} */

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using ApiECommerce.Modelo;
-using ApiECommerce.IServices;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ProyectoFinal_PrograIII.Modelo;
+using ProyectoFinal_PrograIII.IServices;
 
-namespace ApiECommerce.Controladores
+namespace ProyectoFinal_PrograIII.Controladores
 {
     [Route("api/[controller]")]
     [ApiController]
