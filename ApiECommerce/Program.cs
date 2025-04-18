@@ -4,12 +4,22 @@ using ProyectoFinal_PrograIII.IServices;
 using ProyectoFinal_PrograIII.Servicio;
 using ProyectoFinal_PrograIII.Modelo;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios al contenedor
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IComprasService, CompraServicio>();
+builder.Services.AddScoped<IVentasService, VentaServicio>();
+builder.Services.AddScoped<IInventarioService, InventarioServicio>();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    
+    options.JsonSerializerOptions.WriteIndented = true;
+});
+// Configurar la conexión a la base de datos MySQL
 
 // Configurar la conexión a MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

@@ -7,10 +7,9 @@ namespace ProyectoFinal_PrograIII.Modelo
     {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
-        public int Id_cliente { get; set; } // Clave foránea
-        // Otras propiedades del pedido
-
-        public Cliente Cliente { get; set; } // Propiedad de navegación
-        public ICollection<DetallePedido> DetallesPedido { get; set; }
+        public decimal Total { get; set; }
+        public int Id_cliente { get; set; }
+        public virtual Cliente Cliente { get; set; }
+        public virtual ICollection<DetallePedido> DetallesPedido { get; set; }
     }
 }

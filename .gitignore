@@ -4,4 +4,6 @@ SimuladorCompras/bin
 SimuladorCompras/obj/Debug
 .vs
 ApiECommerce/obj
+ApiECommerce/Servicio/VentasServicio.cs
+ApiECommerce/Servicio/VentasServicio.cs
 SimuladorCompras/obj
