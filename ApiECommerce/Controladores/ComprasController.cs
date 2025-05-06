@@ -5,7 +5,6 @@ using ProyectoFinal_PrograIII.Servicio; // Si estás usando una capa de servicio
 using ProyectoFinal_PrograIII.ApiECommerce.IServices;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace ProyectoFinal_PrograIII.Controladores
 {
@@ -13,31 +12,24 @@ namespace ProyectoFinal_PrograIII.Controladores
     [ApiController]
     public class ComprasController : ControllerBase
     {
-        private readonly ProyectoFinal_PrograIII.ApiECommerce.IServices.IComprasService _comprasService;
+       private readonly IComprasServicio _comprasServicio;
 
-        public ComprasController(ProyectoFinal_PrograIII.ApiECommerce.IServices.IComprasService comprasService)
+    public ComprasController(IComprasServicio comprasServicio)
         {
-            _comprasService = comprasService;
+            _comprasServicio = comprasServicio;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Compra>>> GetCompras()
         {
-                try
-                {
-                    var compras = await _comprasService.ObtenerComprasAsync();
-                    return Ok(compras);
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(500, $"Error interno del servidor: {ex.Message}");
-                }
+            var compras = await _comprasServicio.ObtenerComprasAsync();
+            return Ok(compras);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Compra>> GetCompra(int id)
         {
-            var compra = await _comprasService.ObtenerCompraAsync(id);
+            var compra = await _comprasServicio.ObtenerComprasAsync(id);
             if (compra == null)
             {
                 return NotFound();
@@ -46,33 +38,53 @@ namespace ProyectoFinal_PrograIII.Controladores
         }
 
         [HttpPost]
-            public async Task<ActionResult<Compra>> CrearCompra([FromBody] Compra compra)
+        public async Task<ActionResult<Compra>> CrearCompras([FromBody] Compra compra)
+        {
+            try
             {
                 if (compra == null)
                 {
-                    return BadRequest("La compra no puede ser nula");
+                    return BadRequest("Datos de compra inválidos");
                 }
 
-                compra.Fecha = DateTime.Now;
-                
-                if (await _comprasService.CrearCompraAsync(compra))
+                // Limpiar datos para nueva compra
+                compra.Id = 0;
+                compra.Proveedor = null;  // Importante: limpiar objeto proveedor
+
+                if (compra.DetalleCompras != null)
                 {
-                    return CreatedAtAction(nameof(GetCompra), new { id = compra.Id }, compra);
+                    foreach (var detalle in compra.DetalleCompras)
+                    {
+                        detalle.Id = 0;
+                        detalle.IdCompras = 0;
+                        detalle.Compra = null;
+                        detalle.Producto = null;
+                    }
                 }
+
+                if (await _comprasServicio.CrearComprasAsync(compra))
+                {
+                    return CreatedAtAction(nameof(GetCompras), new { id = compra.Id }, compra);
+                }
+
                 return BadRequest("Error al crear la compra.");
             }
-
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
         [HttpPut("{id}")]
-        public async Task<IActionResult> ActualizarCompra(int id, [FromBody] Compra compra)
+        public async Task<IActionResult> ActualizarCompras(int id, [FromBody] Compra compra)
         {
             if (id != compra.Id)
             {
                 return BadRequest("El ID de la compra no coincide con el ID de la ruta.");
             }
 
-            if (await _comprasService.ActualizarCompraAsync(compra))
+            if (await _comprasServicio.ActualizarComprasAsync(compra))
             {
-                return NoContent();
+                return NoContent(); // Indica que la actualización fue exitosa (sin devolver contenido)
             }
             return NotFound();
         }
@@ -80,7 +92,7 @@ namespace ProyectoFinal_PrograIII.Controladores
         [HttpDelete("{id}")]
         public async Task<IActionResult> EliminarCompra(int id)
         {
-            if (await _comprasService.EliminarCompraAsync(id))
+            if (await _comprasServicio.EliminarComprasAsync(id))
             {
                 return NoContent();
             }

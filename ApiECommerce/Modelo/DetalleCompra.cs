@@ -1,18 +1,31 @@
-using System;
-using ProyectoFinal_PrograIII.Modelo;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace ProyectoFinal_PrograIII.Modelo
 {
     public class DetalleCompra
     {
         public int Id { get; set; }
-        public int Id_Compras { get; set; } // Clave foránea
-        public int Id_Productos { get; set; } // Clave foránea
-        public int Cantidad { get; set; }
-        public decimal PrecioUnitario { get; set; }
-        public decimal Subtotal { get; set; }
         
-        // Cambiamos Compra por Compras para qsue coincida con el nombre de la clase
-        public Compra Compra { get; set; }
-        public Producto Producto { get; set; } // Propiedad de navegación
+        [ForeignKey("Compra")]
+        public int IdCompras { get; set; }
+        
+        [ForeignKey("Producto")]
+        public int IdProductos { get; set; }
+        
+        public int CantidadProductos { get; set; }
+        
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PrecioUnitario { get; set; }
+        
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal SubTotal { get; set; }
+
+        [JsonIgnore]
+        public virtual Compra? Compra { get; set; }
+        
+        [JsonIgnore]
+        public virtual Producto? Producto { get; set; }
     }
 }
