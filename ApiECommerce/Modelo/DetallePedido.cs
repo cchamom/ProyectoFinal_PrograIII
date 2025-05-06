@@ -1,19 +1,25 @@
-using System;
-using System.Collections.Generic;
-using ProyectoFinal_PrograIII.Modelo;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace ProyectoFinal_PrograIII.Modelo
 {
-    public class DetallePedido    {
+    public class DetallePedido
+    {
         public int Id { get; set; }
-        public int Id_Venta { get; set; }
-        public int Id_Producto { get; set; }
-        public int Cantidad { get; set; }
-        public decimal PrecioUnitario { get; set; }
-        public decimal Subtotal { get; set; }
 
-        // Propiedades de navegación
-        public virtual Ventas Venta { get; set; }
-        public virtual Producto Producto { get; set; }
+        [ForeignKey("Pedido")]
+        public int IdPedidos { get; set; }
+
+        [ForeignKey("Producto")]
+        public int IdProductos { get; set; }
+
+        public int CantidadProductos { get; set; }
+        public decimal PrecioUnitario { get; set; }
+        public decimal SubTotal { get; set; }
+         [JsonIgnore]
+
+        public Pedido? Pedido { get; set; }
+        [JsonIgnore]
+        public Producto? Producto { get; set; }
     }
 }
-
