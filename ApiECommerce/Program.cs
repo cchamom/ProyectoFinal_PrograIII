@@ -1,53 +1,42 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProyectoFinal_PrograIII.Data;
-using ProyectoFinal_PrograIII.IServices;
+using ProyectoFinal_PrograIII.ApiECommerce.IServices;
 using ProyectoFinal_PrograIII.Servicio;
-using ProyectoFinal_PrograIII.Modelo;
-
+using ProyectoFinal_PrograIII.Data; // Asegúrate de tener esta línea
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Agregar servicios al contenedor
-builder.Services.AddControllers();
+// Agregar servicios al contenedor.
+builder.Services.AddControllers(); // Si vas a crear una API con controladores
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IComprasService, CompraServicio>();
-builder.Services.AddScoped<IVentasService, VentaServicio>();
-builder.Services.AddScoped<IInventarioService, InventarioServicio>();
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    
-    options.JsonSerializerOptions.WriteIndented = true;
-});
-// Configurar la conexión a la base de datos MySQL
 
-// Configurar la conexión a MySQL
+// Configurar la conexión a la base de datos MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(
-        connectionString, 
-        ServerVersion.AutoDetect(connectionString),
-        mySqlOptions => mySqlOptions.EnableRetryOnFailure()
-    )
-);
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddControllersWithViews()
-    .AddRazorRuntimeCompilation(); 
+builder.Services.AddScoped<IClienteService, ClienteServicio>();
+builder.Services.AddScoped<IReporteServicio, ReporteServicio>();
+builder.Services.AddScoped<IInventarioService, InventarioServicio>();
 
-// Registrar servicio de productos
-builder.Services.AddScoped<IProductoService, ProductoServicio>();
+builder.Services.AddScoped<IComprasServicio, CompraServicio>();
+builder.Services.AddScoped<IPedidosServicio, PedidoServicio>();
+builder.Services.AddScoped<IProductoServicio, ProductoServicio>();
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(); 
 }
 
 app.UseHttpsRedirection();
+
 app.UseAuthorization();
-app.MapControllers();
+
+app.MapControllers(); // Si vas a crear una API con controladores
 
 app.Run();
 
