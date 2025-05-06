@@ -9,7 +9,7 @@ public class Proveedor
     public string Direccion { get; set;}/*chat*/ = string.Empty;
     
     public int Nit{get; set;}
-    public string Correo_Electronico{get; set; }/*chat*/ = string.Empty;
+    public string CorreoElectronico{get; set; }/*chat*/ = string.Empty;
 
     public int Telefono { get; set; }
 
