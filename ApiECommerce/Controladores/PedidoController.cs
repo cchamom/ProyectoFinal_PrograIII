@@ -49,9 +49,12 @@ namespace ProyectoFinal_PrograIII.Controladores
                 DetallesPedido = pedidoDTO.DetallesPedido.Select(d => new DetallePedido
                 {
                     IdProductos = d.IdProductos,
-                    CantidadProductos = d.CantidadProductos
+                    CantidadProductos = d.CantidadProductos,
+                    PrecioUnitario = d.PrecioUnitario,
+                    SubTotal = d.SubTotal
                 }).ToList()
             };
+
 
             if (await _pedidosServicio.CrearPedidosAsync(pedido))
             {

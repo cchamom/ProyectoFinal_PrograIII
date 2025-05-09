@@ -18,9 +18,13 @@ namespace ProyectoFinal_PrograIII.Modelo
         public double Total { get; set; }
         public string Estado { get; set; }
         [JsonIgnore]
-        public Cliente Cliente { get; set; }
+        public virtual Cliente Cliente { get; set; }
 
-        public ICollection<DetallePedido> DetallesPedido { get; set; }
+        public virtual ICollection<DetallePedido> DetallesPedido { get; set; }
+        public Pedido()
+        {
+            DetallesPedido = new HashSet<DetallePedido>();
+        }
 
     }
 }
