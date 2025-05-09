@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoFinal_PrograIII.Data;
 
@@ -11,9 +12,11 @@ using ProyectoFinal_PrograIII.Data;
 namespace ProyectoFinal_PrograIII.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250429025653_CreateDatabaseSchema")]
+    partial class CreateDatabaseSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,6 +104,8 @@ namespace ProyectoFinal_PrograIII.Migrations
                     b.Property<decimal>("PrecioUnitario")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("ProductoId1")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("SubTotal")
                         .HasColumnType("decimal(18,2)");
@@ -110,6 +115,8 @@ namespace ProyectoFinal_PrograIII.Migrations
                     b.HasIndex("IdCompras");
 
                     b.HasIndex("IdProductos");
+
+                    b.HasIndex("ProductoId1");
 
                     b.ToTable("DetallesCompra", (string)null);
                 });
@@ -174,7 +181,8 @@ namespace ProyectoFinal_PrograIII.Migrations
                     b.Property<decimal>("PrecioUnitario")
                         .HasColumnType("decimal(18,2)");
 
-                  
+                    b.Property<int?>("ProductoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Referencia")
                         .IsRequired()
@@ -196,6 +204,8 @@ namespace ProyectoFinal_PrograIII.Migrations
                     b.HasIndex("IdPedidos");
 
                     b.HasIndex("IdProductos");
+
+                    b.HasIndex("ProductoId");
 
                     b.ToTable("movimientos_inventario", (string)null);
                 });
@@ -310,10 +320,6 @@ namespace ProyectoFinal_PrograIII.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_DetallesCompra_Productos");
 
-                    b.HasOne("ProyectoFinal_PrograIII.Modelo.Producto", null)
-                        .WithMany("DetallesCompra")
-                        .HasForeignKey("ProductoId1");
-
                     b.Navigation("Compra");
 
                     b.Navigation("Producto");
@@ -357,6 +363,9 @@ namespace ProyectoFinal_PrograIII.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_MovimientoInventario_Producto");
 
+                    b.HasOne("ProyectoFinal_PrograIII.Modelo.Producto", null)
+                        .WithMany("MovimientosInventario")
+                        .HasForeignKey("ProductoId");
 
                     b.Navigation("Compra");
 
